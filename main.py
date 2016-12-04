@@ -28,7 +28,7 @@ def main():
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         cv2.imshow("Webcam Display", frame)
-        cv2.waitkey(1000)
+        cv2.waitKey(1000)
 
     # cleanup
     cap.release()

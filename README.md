@@ -1,3 +1,2 @@
-# weather-station
-A weather station on the Raspberry Pi, written in Python.
-It collects data like temperature and humidity.
+# webcam-stand
+A 360 degree webcam stand on the Raspberry Pi, written in Python.

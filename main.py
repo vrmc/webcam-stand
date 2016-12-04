@@ -15,7 +15,7 @@ def main():
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # create a grayscal version of the frame
         faces = face_casc.detectMultiScale(
             gray,
-            scaleFactor=1.1,
+            scaleFactor=1,
             minNeighbors=5,
             minSize=(30, 30),
             flags = cv2.CASCADE_SCALE_IMAGE
@@ -27,9 +27,8 @@ def main():
             print("centre of face: ({}, {})".format((2*x + w) / 2, (2*y + h) / 2))
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-        cv2.imshow("Faces found", frame)
-        cv2.waitkey(0)
-        time.sleep(1) # pause so that the pi doesn't burn out
+        cv2.imshow("Webcam Display", frame)
+        cv2.waitkey(1000)
 
     # cleanup
     cap.release()

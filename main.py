@@ -7,18 +7,19 @@ def main():
 
     cap = cv2.VideoCapture(0) # reads from first webcam
     casc_path = sys.argv[1] # cascade filepath
+    face_casc = cv2.CascadeClassifier(casc_path)
 
     while True:
         ret, frame = cap.read() # read a frame from cap
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # create a grayscal version of the frame
-        faces = faceCascade.detectMultiScale(
+        faces = face_casc.detectMultiScale(
             gray,
             scaleFactor=1.1,
             minNeighbours=5,
             minSize=(30, 30),
             flags = cv2.cv.CV_HAAR_SCALE_IMAGE
         )
-        print("Found {} faces".format(len(faces))
+        print("Found {} faces".format(len(faces)))
 
         for (x, y, w, h) in faces:
             # print coordinates of centre of rectangle

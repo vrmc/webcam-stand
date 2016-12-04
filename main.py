@@ -25,6 +25,8 @@ def main():
             # print coordinates of centre of rectangle
             print("centre of face: ({}, {})".format((2*x + w) / 2, (2*y + h) / 2))
 
+        time.sleep(1) # pause so that the pi doesn't burn out
+
     # cleanup
     cap.release()
     cv2.destroyAllWindows()

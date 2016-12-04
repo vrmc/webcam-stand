@@ -15,9 +15,9 @@ def main():
         faces = face_casc.detectMultiScale(
             gray,
             scaleFactor=1.1,
-            minNeighbours=5,
+            minNeighbors=5,
             minSize=(30, 30),
-            flags = cv2.cv.CV_HAAR_SCALE_IMAGE
+            flags = cv2.CASCADE_SCALE_IMAGE
         )
         print("Found {} faces".format(len(faces)))
 

@@ -25,7 +25,10 @@ def main():
         for (x, y, w, h) in faces:
             # print coordinates of centre of rectangle
             print("centre of face: ({}, {})".format((2*x + w) / 2, (2*y + h) / 2))
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
+        cv2.imshow("Faces found", frame)
+        cv2.waitkey(0)
         time.sleep(1) # pause so that the pi doesn't burn out
 
     # cleanup

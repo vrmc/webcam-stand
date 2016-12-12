@@ -21,8 +21,7 @@ def main():
     MID_X = webcam.WIDTH / 2
     MID_Y = webcam.HEIGHT / 2
 
-    CUR_POS = 0.5
-    servo.rotate(CUR_POS)
+    servo.rotate(0.5)
     while True:
         cv2.waitKey(500)
 
@@ -49,12 +48,10 @@ def main():
         if diff > EPSILON:
             if coord[0] < MID_X:
                 print(MID_X, "turning towards the left")
-                CUR_POS += DIVISION
+                servo.rotate_inc(DIVISION)
             elif coord[0] > MID_X:
                 print(MID_X, "turning towards the right")
-                CUR_POS -= DIVISION
-
-        servo.rotate(CUR_POS)
+                servo.rotate_inc(-DIVISION)
 
     cv2.destroyAllWindows()
 

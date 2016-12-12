@@ -1,38 +1,63 @@
-import cv2
-import sys
 import time
 
+import cv2
+import RPi.GPIO as IO
+
+from servo import Servo
+from webcam import Webcam
+
+EPSILON = 50 # tolerance in no. of pixels for being off-center
+DIVISION = 0.005 # division in rotation of webcam
+
+# list of pins
+SRV_PIN = 18 # servo pin
+
 def main():
-    if not len(sys.argv) == 2:
-        print("usage: {} [cascade filepath]".format(sys.argv[0]))
+    IO.setmode(IO.BCM)
 
-    cap = cv2.VideoCapture(0) # reads from first webcam
-    casc_path = sys.argv[1] # cascade filepath
-    face_casc = cv2.CascadeClassifier(casc_path)
+    servo = Servo(SRV_PIN)
+    webcam = Webcam("haarcascade_frontalface_default.xml")
 
+    MID_X = webcam.WIDTH / 2
+    MID_Y = webcam.HEIGHT / 2
+
+    CUR_POS = 0.5
+    servo.rotate(CUR_POS)
     while True:
-        ret, frame = cap.read() # read a frame from cap
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # create a grayscal version of the frame
-        faces = face_casc.detectMultiScale(
-            gray,
-            scaleFactor=1,
-            minNeighbors=5,
-            minSize=(30, 30),
-            flags = cv2.CASCADE_SCALE_IMAGE
-        )
-        print("Found {} faces".format(len(faces)))
+        cv2.waitKey(500)
 
-        for (x, y, w, h) in faces:
-            # print coordinates of centre of rectangle
-            print("centre of face: ({}, {})".format((2*x + w) / 2, (2*y + h) / 2))
+        _, frame = webcam.cap.read()
+        faces = webcam.detect_faces()
+        print("Detected {} faces.".format(len(faces)))
+
+        for x, y, w, h in faces:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.imshow('Webcam Output', frame)
 
-        cv2.imshow("Webcam Display", frame)
-        cv2.waitKey(1000)
+        if len(faces) == 0:
+            continue
+        elif len(faces) == 1:
+            x, y, w, h = faces[0]
+            coord = ((2*x + w) / 2, (2*y + h) / 2)
+        else:
+            avg_x = sum((2*x + w) / 2 for x, _, w, _ in faces) / len(faces)
+            avg_y = sum((2*y + h) / 2 for _, y, _, h in faces) / len(faces)
+            coord = (avg_x, avg_y)
 
-    # cleanup
-    cap.release()
+        diff = abs(coord[0] - MID_X)
+        print(coord, diff)
+        if diff > EPSILON:
+            if coord[0] < MID_X:
+                print(MID_X, "turning towards the left")
+                CUR_POS += DIVISION
+            elif coord[0] > MID_X:
+                print(MID_X, "turning towards the right")
+                CUR_POS -= DIVISION
+
+        servo.rotate(CUR_POS)
+
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
+

@@ -22,6 +22,18 @@ class State(Enum):
     ADJUSTING = 3
     CENTERED = 4
 
+import cv2
+import RPi.GPIO as IO
+
+from servo import Servo
+from webcam import Webcam
+
+EPSILON = 50 # tolerance in no. of pixels for being off-center
+DIVISION = 0.005 # division in rotation of webcam
+
+# list of pins
+SRV_PIN = 18 # servo pin
+
 def main():
     state = State.OFF
     GPIO.setmode(GPIO.BCM)
@@ -35,6 +47,10 @@ def main():
     MID_X = webcam.WIDTH / 2
     MID_Y = webcam.HEIGHT / 2
 
+    MID_X = webcam.WIDTH / 2
+    MID_Y = webcam.HEIGHT / 2
+
+    servo.rotate(0.5)
     while True:
         if not switch.is_pressed():
             continue
